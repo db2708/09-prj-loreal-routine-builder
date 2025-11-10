@@ -9,6 +9,7 @@
 body {
   font-family: "Montserrat", Arial, Helvetica, sans-serif;
   color: #333;
+  background: #7e0a22;
   display: flex;
   justify-content: center;
 }
@@ -31,26 +32,39 @@ body {
 }
 
 .site-title {
-  font-size: 22px;
-  font-weight: 500;
+  font-size: 28px;
+  font-weight: 600;
   margin-bottom: 10px;
+  color: #ffffff;
 }
 
 /* category filter */
 .search-section {
   margin: 30px 0;
   display: flex;
+  gap: 12px;
 }
 
 .search-section select {
-  width: 100%;
-  padding: 16px;
+  /* keep select a fixed-ish width while input takes remaining space */
+  flex: 0 0 260px;
+  width: auto;
+  padding: 14px 12px;
   font-size: 18px;
-  border: 2px solid #000;
+  border: 2px solid #e3a525;
   border-radius: 8px;
   cursor: pointer;
-  background-color: white;
+  background-color: #fee8ed;
   font-weight: 500;
+}
+
+.search-section #searchInput {
+  flex: 1 1 auto;
+  padding: 14px 12px;
+  font-size: 16px;
+  border: 2px solid #e3a525;
+  border-radius: 8px;
+  background-color: #fee8ed;
 }
 
 .search-section select:focus {
@@ -58,36 +72,98 @@ body {
   border-color: #666;
 }
 
-/* chat section */
+/* chat section (replaced with preferred chat UI styles) */
 .chatbox {
-  margin: 40px 0;
-  border: 2px solid #000;
-  border-radius: 8px;
-  padding: 26px;
+  margin: 35px 0;
+  width: 100%;
+  /* allow the chat area to be wider to match the page wrapper and provide
+     more horizontal room for long messages */
+  max-width: 900px;
 }
 
-.chatbox h2 {
-  font-size: 20px;
-  margin-bottom: 20px;
-}
-
+/* chat viewport */
 .chat-window {
+  /* make the chat/message viewport taller so conversations have more
+     visible context — responsive by using viewport height with a max cap */
+  height: 70vh;
+  max-height: 780px;
+  border: 3px solid #e3a525;
   padding: 20px;
   font-size: 18px;
   line-height: 1.5;
-  height: 250px;
   overflow-y: auto;
-  background: #fafafa;
-  margin-bottom: 20px;
+  background: #fee8ed;
+  white-space: pre-line;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
-/* placeholder message */
-.placeholder-message {
-  width: 100%;
-  text-align: center;
-  padding: 40px;
-  color: #666;
-  font-size: 18px;
+/* message bubble base */
+.msg {
+  margin: 0;
+  line-height: 1.4;
+  max-width: 78%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  word-wrap: break-word;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* assistant bubble (left) */
+.msg.ai {
+  align-self: flex-start;
+  background: #fff0f5;
+  color: #333333;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 14px 14px 14px 4px;
+}
+
+/* user bubble (right) */
+.msg.user {
+  align-self: flex-end;
+  background: #e3a535;
+  color: #fff0f3;
+  border-radius: 14px 14px 4px 14px;
+}
+
+/* Compatibility: style the DOM nodes created by `script.js` which use
+   classes `chat-message chat-user` and `chat-message chat-assistant`.
+   This avoids changing the JS and provides the same bubble UI. */
+.chat-message.chat-assistant {
+  align-self: flex-start;
+  background: #fef1f5; /* assistant color requested */
+  color: #333333;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 14px 14px 14px 4px;
+  max-width: 78%;
+  padding: 10px 14px;
+  margin: 6px 0;
+  word-wrap: break-word;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.chat-message.chat-user {
+  align-self: flex-end;
+  background: #e3a534; /* user color requested */
+  color: #ffffff;
+  border-radius: 14px 14px 4px 14px;
+  max-width: 78%;
+  padding: 10px 14px;
+  margin: 6px 0;
+  word-wrap: break-word;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* Small helper: ensure the thinking placeholder looks like assistant */
+.chat-message.thinking {
+  opacity: 0.85;
+  font-style: italic;
+}
+
+/* small vertical gap between user bubble and next AI bubble */
+.msg.user + .msg.ai {
+  margin-top: 1em;
 }
 
 /* input row */
@@ -95,25 +171,29 @@ body {
   display: flex;
   gap: 12px;
   margin-top: 16px;
+  align-items: center;
 }
 
+/* text input */
 .chat-form input {
   flex: 1;
   padding: 12px;
+  border: 2px solid #e3a525;
+  background: #fee8ed;
   font-size: 18px;
-  border: none;
-  border-bottom: 2px solid #ccc;
-  background: transparent;
+  border-radius: 6px;
 }
 
+/* input focus for accessibility */
 .chat-form input:focus {
-  outline: none;
-  border-bottom-color: #000;
+  outline: 2px solid #e3a525;
+  outline-offset: 2px;
 }
 
+/* send button */
 .chat-form button {
   font-size: 18px;
-  background: #000;
+  background: #e3a535;
   color: #fff;
   border: none;
   padding: 12px;
@@ -124,14 +204,21 @@ body {
   justify-content: center;
   cursor: pointer;
   transition: background 0.3s;
+  border-radius: 6px;
 }
 
+/* send icon sizing (if using material icons) */
+.chat-form button .material-icons {
+  font-size: 24px;
+}
+
+/* button hover/focus states */
 .chat-form button:hover {
-  background: #666666;
+  background: #d1961d;
 }
 
 .chat-form button:focus {
-  outline: 2px solid #000;
+  outline: 2px solid #e3a525;
   outline-offset: 2px;
 }
 
@@ -153,7 +240,7 @@ body {
   margin: 60px 0 40px;
   text-align: center;
   font-size: 14px;
-  color: #666;
+  color: #ffffff;
 }
 
 .site-footer nav {
@@ -162,12 +249,12 @@ body {
 
 .site-footer a {
   margin: 0 8px;
-  color: #000;
-  text-decoration: none;
+  color: #ffffff;
+  text-decoration: underline;
 }
 
 .site-footer a:hover {
-  color: #666666;
+  color: #ffffff;
 }
 
 /* products grid */
@@ -178,9 +265,22 @@ body {
   margin: 30px 0;
 }
 
+/* Placeholder message shown before a category is selected */
+.placeholder-message {
+  width: 100%;
+  text-align: center;
+  /* match Selected Products heading size and color */
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
+  /* inherit page font but make it feel like the heading */
+  font-family: inherit;
+  padding: 22px 12px;
+}
+
 .product-card {
   flex: 0 1 calc(33.333% - 14px);
-  border: 1px solid #ccc;
+  border: 2px solid #e3a525;
   padding: 15px;
   border-radius: 4px;
   display: flex;
@@ -215,15 +315,23 @@ body {
 
 /* selected products */
 .selected-products {
+  /* Use same visual language as .container.card-theme for consistency */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: #7e0a22;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  padding: 16px;
+  filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.12));
   margin: 40px 0;
-  padding: 20px;
-  border: 2px solid #000;
-  border-radius: 8px;
+  box-sizing: border-box;
+  border: 2px solid #e3a525;
 }
 
 .selected-products h2 {
   font-size: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 #selectedProductsList {
@@ -233,23 +341,485 @@ body {
 }
 
 .generate-btn {
-  width: 100%;
-  margin-top: 20px;
-  padding: 16px;
+  /* Use flex sizing so the Generate button is slightly shorter when paired with Clear */
+  /* make Generate noticeably longer than Clear */
+  flex: 3 1 auto;
+  margin-top: 0;
+  padding: 14px 18px;
   font-size: 18px;
   font-weight: 500;
   color: #fff;
-  background: #000;
+  background: #e3a525;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s;
+  min-width: 250px;
 }
 
 .generate-btn:hover {
-  background: #666;
+  background: #d1961d;
 }
 
 .generate-btn i {
   margin-right: 8px;
+}
+
+/* Clear selections button (smaller, secondary) */
+.selected-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  align-items: center;
+}
+.clear-btn {
+  /* shorter, same visual weight as generate but compact */
+  /* make Clear visually compact: fixed small width while keeping same font/color */
+  flex: 0 0 auto;
+  width: 88px;
+  min-width: 64px;
+  /* match vertical padding of .generate-btn so heights align */
+  padding: 14px 8px;
+  font-size: 18px; /* match .generate-btn */
+  font-weight: 500;
+  color: #ffffff; /* match .generate-btn */
+  background: #e3a525; /* same background as Generate */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.clear-btn:hover {
+  background: #d1961d; /* same hover as generate */
+}
+
+/* Responsive: if space is narrow, make buttons stack */
+@media (max-width: 480px) {
+  .selected-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .generate-btn,
+  .clear-btn {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+/* Splash overlay styles */
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0e0e0e;
+  z-index: 9999;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  opacity: 1;
+  visibility: visible;
+}
+
+.splash-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.splash-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.splash-brand {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.splash-text {
+  font-size: 40px;
+  font-weight: 500;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1;
+}
+
+.splash-logo {
+  max-width: 240px;
+  width: auto;
+  max-height: 72px;
+  height: auto;
+  display: block;
+  margin: 0;
+}
+
+/* Circular outline wrapper around brand + button */
+.splash-circle {
+  box-sizing: border-box;
+  width: min(740px, 92vw);
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px;
+  gap: 48px;
+  border-radius: 50%;
+  background: transparent;
+  position: relative;
+  overflow: visible;
+}
+
+/* Make sure contents don't overflow the circle on narrow screens */
+@media (max-width: 420px) {
+  .splash-circle {
+    padding: 18px;
+    width: 88vw;
+    gap: 20px;
+  }
+  .splash-logo {
+    max-height: 56px;
+  }
+  .splash-text {
+    font-size: 18px;
+  }
+  .splash-enter {
+    min-width: 180px;
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+}
+
+/* inner mask to create a ring */
+.splash-circle::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: #0e0e0e;
+  z-index: 1;
+}
+
+/* rotating gradient ring */
+.splash-circle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #e3a535 0%, #ffdc73 100%);
+  z-index: 0;
+  pointer-events: none;
+  box-shadow: 0 0 10px #e3a535, 0 0 20px #e3a535, 0 0 30px #ffdc73;
+  animation: rotateGradient 4s linear infinite,
+    pulseGlow 2.5s ease-in-out infinite;
+}
+
+/* ensure inner content sits above the masked background */
+.splash-circle > * {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes rotateGradient {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 10px #e3a535, 0 0 20px #e3a535, 0 0 30px #ffdc73;
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 20px #ffdc73, 0 0 40px #e3a535, 0 0 60px #ffdc73;
+    opacity: 0.95;
+  }
+}
+
+/* Button styles (neon pulse) */
+.btn {
+  position: relative;
+  padding: 0.6rem 2rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  min-width: 180px;
+  z-index: 1;
+  border-radius: 6px;
+  line-height: 2;
+}
+
+.neon-pulse {
+  background: #0e0e0e;
+  border: 2px solid #e3a535;
+  box-shadow: 0 0 10px rgba(227, 165, 53, 0.25);
+  overflow: visible;
+}
+
+.neon-pulse::before,
+.neon-pulse::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border: 2px solid #e3a535;
+  border-radius: inherit;
+  animation: pulseOut 2s ease-out infinite;
+  opacity: 0;
+}
+
+.neon-pulse::after {
+  animation-delay: 1s;
+}
+
+@keyframes pulseOut {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.splash-enter:focus {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+/* Prevent the underlying page from scrolling while splash is active */
+body.splash-active {
+  overflow: hidden !important;
+  height: 100vh !important;
+  touch-action: none;
+}
+
+/* Product card theme (adapted from user's provided CSS) */
+@import url("https://fonts.googleapis.com/css2?family=Righteous&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap");
+
+.container.card-theme {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(17, 25, 40, 0.25);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  padding: 12px;
+  filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.12));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* Slightly narrower so content breathes; still 3-per-row on desktop */
+  flex: 0 0 calc(31% - 12px);
+  max-width: calc(31% - 12px);
+  position: relative; /* needed for absolutely-positioned overlay */
+  /* make cards a bit taller vertically */
+  min-height: 300px;
+  box-sizing: border-box;
+}
+
+.container.card-theme .wrapper {
+  width: 100%;
+  height: 100%;
+  /* center image + title on the card front */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.container.card-theme .banner-image {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  /* larger image so cards keep their current visual size without description */
+  height: 160px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.container.card-theme .banner-image {
+  margin-bottom: 0; /* spacing handled by wrapper gap */
+}
+
+.container.card-theme h1 {
+  font-family: "Righteous", sans-serif;
+  color: rgba(255, 255, 255, 0.98);
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/* Description overlay (hidden by default). On hover we reveal it and center text. */
+.container.card-theme .desc-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  background: rgba(17, 25, 40, 0.95);
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease-in-out;
+  z-index: 6;
+}
+
+.container.card-theme .desc-overlay .desc-inner {
+  max-width: 92%;
+  font-family: "Lato", sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  word-wrap: break-word;
+}
+
+/* Reveal only the description when hovering the card */
+.container.card-theme:hover .desc-overlay,
+.container.card-theme:focus-within .desc-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* product descriptions removed from card per request */
+
+.container.card-theme .button-wrapper {
+  margin-top: 12px;
+}
+
+.container.card-theme .btn {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.container.card-theme .btn + .btn {
+  margin-left: 10px;
+}
+
+.container.card-theme .outline {
+  background: transparent;
+  color: rgba(0, 212, 255, 0.9);
+  border: 1px solid rgba(0, 212, 255, 0.6);
+  transition: all 0.2s ease;
+}
+
+.container.card-theme .outline:hover {
+  transform: scale(1.05);
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.container.card-theme .fill {
+  background: rgba(0, 212, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: bold;
+}
+
+.container.card-theme .fill:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 6px 4px rgba(0, 0, 0, 0.12));
+}
+
+/* Make product grid wrap nicely */
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* Responsive: 2 columns on medium screens, 1 on small */
+@media (max-width: 900px) {
+  .container.card-theme {
+    flex: 0 0 calc(50% - 12px);
+    max-width: calc(50% - 12px);
+  }
+  .container.card-theme .banner-image {
+    @media (max-width: 640px) {
+      /* On narrower screens make select and search stack cleanly */
+      .search-section {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .search-section select {
+        flex: 0 0 auto;
+        width: 100%;
+      }
+      .search-section #searchInput {
+        width: 100%;
+      }
+    }
+    height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container.card-theme {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .container.card-theme .banner-image {
+    height: 220px;
+  }
+}
+
+/* Selected card visual */
+.container.card-theme.selected {
+  border: 3px solid #e3a525;
+}
+
+/* Selected products list (mini cards) */
+#selectedProductsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+}
+.selected-mini {
+  width: calc(20% - 6.4px); /* 5 per row */
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.selected-mini .mini-card {
+  background: rgba(255, 255, 255, 0.98);
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 140px; /* increased so larger mini image fits nicely */
+  box-sizing: border-box;
+}
+.selected-mini .mini-image {
+  width: 100%;
+  height: 96px; /* increased height for clearer product preview */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.selected-mini .mini-name {
+  font-size: 13px;
+  text-align: center;
+  color: #222;
 }

@@ -16,6 +16,36 @@
   </head>
 
   <body>
+    <!-- Splash overlay shown before the main chat -->
+    <div
+      id="splash"
+      class="splash-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Welcome"
+    >
+      <div class="splash-content">
+        <div class="splash-circle">
+          <div class="splash-brand">
+            <!-- Replace the src below with your logo file (e.g. img/loreal-logo.png) -->
+            <img
+              src="img/loreal-logo.png"
+              alt="Brand logo"
+              class="splash-logo"
+            />
+            <p class="splash-text">Skincare Advisor</p>
+          </div>
+          <button
+            id="enterBtn"
+            class="btn neon-pulse splash-enter"
+            aria-label="Enter site"
+          >
+            <span>Start Chatting</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="page-wrapper">
       <!------- Header / Branding ------->
       <header class="site-header">
@@ -25,6 +55,12 @@
 
       <!-- Category Filter -->
       <div class="search-section">
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search products by name or keyword…"
+          aria-label="Search products"
+        />
         <select id="categoryFilter">
           <option value="" disabled selected>Choose a Category</option>
           <option value="cleanser">Cleansers</option>
@@ -46,17 +82,34 @@
       <div class="selected-products">
         <h2>Selected Products</h2>
         <div id="selectedProductsList"></div>
-        <button id="generateRoutine" class="generate-btn">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Routine
-        </button>
+        <div class="selected-actions">
+          <button id="generateRoutine" class="generate-btn">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Generate Routine</span>
+          </button>
+          <button
+            id="clearSelections"
+            class="clear-btn"
+            aria-label="Clear selected products"
+          >
+            Clear
+          </button>
+        </div>
       </div>
+      <!-- end .selected-products -->
 
-      <!------- Chat Area ------->
+      <!------- Chat Area (adapted) ------->
       <section class="chatbox">
-        <h2>Let's Build Your Routine</h2>
-        <div id="chatWindow" class="chat-window"></div>
+        <div id="chatWindow" class="chat-window" aria-live="polite">
+          <!-- message bubbles inserted by JS -->
+        </div>
 
-        <form id="chatForm" class="chat-form">
+        <form
+          id="chatForm"
+          class="chat-form"
+          action="#"
+          aria-label="Chat input"
+        >
           <label for="userInput" class="visually-hidden">Message</label>
           <input
             id="userInput"
@@ -66,8 +119,9 @@
             autocomplete="off"
             required
           />
-          <button type="submit" id="sendBtn">
-            <i class="fa-solid fa-paper-plane"></i>
+          <button type="submit" id="sendBtn" aria-label="Send">
+            <!-- use Font Awesome icon available on the page -->
+            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
             <span class="visually-hidden">Send</span>
           </button>
         </form>
